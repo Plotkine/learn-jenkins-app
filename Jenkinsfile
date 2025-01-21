@@ -2,12 +2,21 @@ pipeline {
     agent any
 
     stages {
-        stage('First stage') {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    // reuseNode true // to synchronize workspace
+                }
+            }
             steps {
                 sh '''
-                echo "First stage" // this is executed on Jenkins agent
-                rm test.txt
-                ls -a
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
                 '''
             }
         }
