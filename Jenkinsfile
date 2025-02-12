@@ -21,7 +21,9 @@ pipeline {
             }
         }
         stage('Tests') {
-            sh 'npm test -- --ci'
+            steps {
+                    sh 'npm test -- --ci'
+            }
         }
     }
 }
