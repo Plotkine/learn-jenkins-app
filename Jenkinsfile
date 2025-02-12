@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     stages {
-        /*stage('Build') {
+        stage('Build') {
             agent {
                 docker {
-                    image 'node:18-alpine'
-                    reuseNode true
+                    image 'node:18-alpine' // alpine is a very slim linux distribution, ideal for CI/CD
+                    reuseNode true // synchronizing workspace
                 }
             }
             steps {
@@ -19,28 +19,19 @@ pipeline {
                     ls -la
                 '''
             }
-        }*/
-
-        stage('Test') {
+        }
+        stage('Tests') {
             agent {
                 docker {
-                    image 'node:18-alpine'
-                    reuseNode true
+                    image 'node:18-alpine' // alpine is a very slim linux distribution, ideal for CI/CD
+                    reuseNode true // synchronizing workspace
                 }
             }
-
             steps {
-                sh '''
-                    test -f build/index.html
-                    npm test
-                '''
+                    echo "Test stage"
+                    sh 'test -f ./build/index.html'
+                    sh 'npm test'
             }
-        }
-    }
-
-    post {
-        always {
-            junit 'test-results/junit.xml'
         }
     }
 }
