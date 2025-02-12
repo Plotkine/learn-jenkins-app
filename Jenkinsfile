@@ -17,9 +17,11 @@ pipeline {
                     npm ci
                     npm run build
                     ls -la
-                    npm test -- --ci
                 '''
             }
+        }
+        stage('Tests') {
+            sh 'npm test -- --ci'
         }
     }
 }
