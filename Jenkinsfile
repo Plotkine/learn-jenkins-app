@@ -5,8 +5,8 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'node:18-alpine'
-                    // reuseNode true // to synchronize workspace
+                    image 'node:18-alpine' // alpine is a very slim linux distribution, ideal for CI/CD
+                    reuseNode true // synchronizing workspace
                 }
             }
             steps {
@@ -21,6 +21,12 @@ pipeline {
             }
         }
         stage('Tests') {
+            agent {
+                docker {
+                    image 'node:18-alpine' // alpine is a very slim linux distribution, ideal for CI/CD
+                    reuseNode true // synchronizing workspace
+                }
+            }
             steps {
                     sh 'npm test -- --ci'
             }
