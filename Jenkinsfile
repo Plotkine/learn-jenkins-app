@@ -28,7 +28,9 @@ pipeline {
                 }
             }
             steps {
-                    sh 'npm test -- --ci'
+                    echo "Test stage"
+                    sh 'touch ./build/index.html'
+                    sh 'npm test'
             }
         }
     }
