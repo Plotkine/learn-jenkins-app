@@ -5,8 +5,8 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'node:18-alpine' // alpine is a very slim linux distribution, ideal for CI/CD
-                    reuseNode true // synchronizing workspace
+                    image 'node:18-alpine'
+                    reuseNode true
                 }
             }
             steps {
@@ -14,24 +14,37 @@ pipeline {
                     ls -la
                     node --version
                     npm --version
+                    
+                    npm cache clean --force
+
+                    
                     npm ci
                     npm run build
                     ls -la
                 '''
             }
         }
-        stage('Tests') {
+
+        stage('Test') {
             agent {
                 docker {
-                    image 'node:18-alpine' // alpine is a very slim linux distribution, ideal for CI/CD
-                    reuseNode true // synchronizing workspace
+                    image 'node:18-alpine'
+                    reuseNode true
                 }
             }
+
             steps {
-                    echo "Test stage"
-                    sh 'test -f ./build/index.html'
-                    sh 'npm test'
+                sh '''
+                    test -f build/index.html
+                    npm test
+                '''
             }
+        }
+    }
+
+    post {
+        always {
+            junit 'test-results/junit.xml'
         }
     }
 }
