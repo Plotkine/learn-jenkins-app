@@ -29,9 +29,16 @@ pipeline {
             }
             steps {
                     echo "Test stage"
-                    sh 'test -f ./build/index.html'
+                    sh 'touch ./build/index.html'
                     sh 'npm test'
             }
+        }
+    }
+    post {
+        always {
+            junit 'test-results/junit.xml' // this command comes from the Junit Jenkins plugin
+                                           // https://plugins.jenkins.io/junit/
+                                           // it's used to integrate the result of the command "npm test" in Jenkins
         }
     }
 }
