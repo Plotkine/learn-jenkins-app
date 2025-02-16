@@ -20,7 +20,20 @@ pipeline {
                 '''
             }
         }
-        stage('E2E test') {
+        stage('Unit tests') {
+            agent {
+                docker {
+                    image 'node:18-alpine' // alpine is a very slim linux distribution, ideal for CI/CD
+                    reuseNode true // synchronizing workspace
+                }
+            }
+            steps {
+                    echo "Test stage"
+                    sh 'touch ./build/index.html'
+                    sh 'npm test'
+            }
+        }
+        stage('E2E tests') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.50.1-noble' // https://playwright.dev/docs/docker
@@ -40,7 +53,7 @@ pipeline {
     }
     post {
         always {
-            junit 'jest-results/junit.xml' // this command comes from the Junit Jenkins plugin
+            junit 'test-results/junit.xml' // this command comes from the Junit Jenkins plugin
                                            // https://plugins.jenkins.io/junit/
         }
     }
