@@ -33,14 +33,14 @@ pipeline {
                     node_modules/.bin/serve -s build &
                     npx playwright install
                     sleep 10
-                    npx playwright test --reporter=junit --output=test-results // start the E2E test using playwright
+                    npx playwright test // start the E2E test using playwright
                     '''
             }
         }
     }
     post {
         always {
-            junit 'test-results/junit.xml' // this command comes from the Junit Jenkins plugin
+            junit 'jest-results/junit.xml' // this command comes from the Junit Jenkins plugin
                                            // https://plugins.jenkins.io/junit/
         }
     }
