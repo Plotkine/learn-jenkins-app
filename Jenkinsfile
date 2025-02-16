@@ -29,8 +29,9 @@ pipeline {
             }
             steps {
                     sh '''
-                    npm install serve
-                    node_modules/.bin/serve -s build
+                    npm install serve &
+                    sleep 10
+                    serve -s build
                     npx playwright test // start the E2E test using playwright
                     '''
             }
