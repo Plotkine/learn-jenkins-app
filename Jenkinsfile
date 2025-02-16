@@ -2,11 +2,13 @@ pipeline {
     agent any
 
     stages {
+        /*
+
         stage('Build') {
             agent {
                 docker {
-                    image 'node:18-alpine' // alpine is a very slim linux distribution, ideal for CI/CD
-                    reuseNode true // synchronizing workspace
+                    image 'node:18-alpine'
+                    reuseNode true
                 }
             }
             steps {
@@ -20,41 +22,46 @@ pipeline {
                 '''
             }
         }
-        stage('Unit tests') {
+        */
+
+        stage('Test') {
             agent {
                 docker {
-                    image 'node:18-alpine' // alpine is a very slim linux distribution, ideal for CI/CD
-                    reuseNode true // synchronizing workspace
+                    image 'node:18-alpine'
+                    reuseNode true
                 }
             }
+
             steps {
-                    echo "Test stage"
-                    sh 'touch ./build/index.html'
-                    sh 'npm test'
+                sh '''
+                    #test -f build/index.html
+                    npm test
+                '''
             }
         }
-        stage('E2E tests') {
+
+        stage('E2E') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.50.1-noble' // https://playwright.dev/docs/docker
-                    reuseNode true // synchronizing workspace
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
                 }
             }
+
             steps {
-                    sh '''
+                sh '''
                     npm install serve
                     node_modules/.bin/serve -s build &
-                    npx playwright install
                     sleep 10
-                    npx playwright test // start the E2E test using playwright
-                    '''
+                    npx playwright test
+                '''
             }
         }
     }
+
     post {
         always {
-            junit 'jest-results/junit.xml' // this command comes from the Junit Jenkins plugin
-                                           // https://plugins.jenkins.io/junit/
+            junit 'jest-results/junit.xml'
         }
     }
 }
