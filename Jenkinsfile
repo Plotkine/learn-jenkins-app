@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+        // project is already built on the jenkins server
         /*
 
         stage('Build') {
@@ -53,7 +54,7 @@ pipeline {
                     npm install serve
                     node_modules/.bin/serve -s build &
                     sleep 10
-                    npx playwright test
+                    npx playwright test --report=html
                 '''
             }
         }
