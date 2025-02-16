@@ -25,6 +25,7 @@ pipeline {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.50.1-noble' // https://playwright.dev/docs/docker
                     reuseNode true // synchronizing workspace
+                    args '-u root:root' // run container as root
                 }
             }
             steps {
