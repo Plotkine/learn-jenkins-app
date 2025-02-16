@@ -33,7 +33,7 @@ pipeline {
                     node_modules/.bin/serve -s build &
                     npx playwright install
                     sleep 10
-                    npx playwright test // start the E2E test using playwright
+                    npx playwright test --reporter=junit --output=test-results // start the E2E test using playwright
                     '''
             }
         }
