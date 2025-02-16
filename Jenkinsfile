@@ -53,7 +53,7 @@ pipeline {
     }
     post {
         always {
-            junit 'test-results/junit.xml' // this command comes from the Junit Jenkins plugin
+            junit 'jest-results/junit.xml' // this command comes from the Junit Jenkins plugin
                                            // https://plugins.jenkins.io/junit/
         }
     }
