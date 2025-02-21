@@ -27,16 +27,17 @@ pipeline {
         stage('Tests') {
             parallel {
                 stage('Unit tests') {
-                    stage('Test 1') {
-                        echo "test 1"
-                        stage('Test 2') {
-                            echo "test 2"
-                        }
-                    }
                     agent {
                         docker {
                             image 'node:18-alpine'
                             reuseNode true
+                        }
+                    }
+                    
+                    stage('Test 1') {
+                        echo "test 1"
+                        stage('Test 2') {
+                            echo "test 2"
                         }
                     }
 
