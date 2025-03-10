@@ -80,6 +80,7 @@ pipeline {
             }
             steps {
                 sh '''
+                    whoami
                     npm install netlify-cli -g
                     node_modules/.bin/netlify --version
                 '''
