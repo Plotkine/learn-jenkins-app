@@ -80,8 +80,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    whoami
-                    npm install netlify-cli -g
+                    npm install netlify-cli # if we use the -g option we get a permission error
                     node_modules/.bin/netlify --version
                 '''
             }
