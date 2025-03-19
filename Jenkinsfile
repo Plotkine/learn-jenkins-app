@@ -101,6 +101,7 @@ pipeline {
                 }
             }
             steps {
+                input cancel: 'No', message: 'Deploy to production?', ok: 'Yes'
                 sh '''
                     npm install netlify-cli # if we use the -g option we get a permission error
                     node_modules/.bin/netlify --version
