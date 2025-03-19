@@ -95,9 +95,10 @@ pipeline {
 
         stage('Confirm prod deployment') {
             steps {
-                input cancel: 'No', message: 'Deploy to production?', ok: 'Yes'
+                timeout(15) {
+                    input cancel: 'No', message: 'Deploy to production?', ok: 'Yes'
+                }
             }
-        }
 
         stage('Deploy prod') {
             agent {
