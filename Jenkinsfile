@@ -101,12 +101,12 @@ pipeline {
             }
             
             environment {
-                CI_Environment_URL = 'https://leafy-chebakia-c85d06.netlify.app'
+                CI_ENVIRONMENT_URL = 'https://leafy-chebakia-c85d06.netlify.app'
             }
 
             steps {
                 sh '''
-                    npx playwright test  --reporter=html
+                    npx playwright test --reporter=html
                 '''
             }
 
