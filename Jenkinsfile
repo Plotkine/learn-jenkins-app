@@ -27,9 +27,9 @@ pipeline {
             }
         }
 
-        stage('Tests') {
+        stage('Local: tests') {
             parallel {
-                stage('Local unit tests') {
+                stage('Local: unit tests') {
                     agent {
                         docker {
                             image 'node:18-alpine'
@@ -49,7 +49,7 @@ pipeline {
                         }
                     }
                 }
-                stage('Local E2E') {
+                stage('Local: E2E tests') {
                     agent {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -75,7 +75,7 @@ pipeline {
             }
         }
 
-        stage('Staging deploy') {
+        stage('Staging: deploy') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -98,7 +98,7 @@ pipeline {
             }
         }
 
-        stage('Staging E2E') {
+        stage('Staging: E2E tests') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -112,7 +112,7 @@ pipeline {
 
             steps {
                 sh '''
-                    echo "Performing E2E tests on $STAGING_URL"
+                    echo "Performing E2E tests on $CI_ENVIRONMENT_URL"
                     npx playwright test --reporter=html
                 '''
             }
@@ -124,7 +124,7 @@ pipeline {
             }
         }
 
-        stage('Prod deploy') {
+        stage('Prod: deploy') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -141,7 +141,7 @@ pipeline {
                 '''
             }
         }
-        stage('Prod E2E') {
+        stage('Prod: E2E tests') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
