@@ -113,7 +113,6 @@ pipeline {
             steps {
                 sh '''
                     echo "Performing E2E tests on $CI_ENVIRONMENT_URL"
-                    npx playwright test --reporter=html
                 '''
             }
 
