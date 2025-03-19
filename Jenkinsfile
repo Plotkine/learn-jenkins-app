@@ -49,7 +49,6 @@ pipeline {
                         }
                     }
                 }
-
                 stage('E2E') {
                     agent {
                         docker {
@@ -91,6 +90,27 @@ pipeline {
                     node_modules/.bin/netlify deploy --dir=build --prod
                     node_modules/.bin/netlify status
                 '''
+            }
+        }
+        stage('Prod E2E') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            
+            environment{
+                CI_Environment_URL = 'https://leafy-chebakia-c85d06.netlify.app'
+            }
+            steps {
+                sh '''
+                    npx playwright test  --reporter=html
+                '''
+            
+            post {
+                always {
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Prod HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                }
             }
         }
     }
