@@ -99,7 +99,8 @@ pipeline {
                     input cancel: 'No', message: 'Deploy to production?', ok: 'Yes'
                 }
             }
-
+        }
+        
         stage('Deploy prod') {
             agent {
                 docker {
