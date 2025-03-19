@@ -75,10 +75,10 @@ pipeline {
             }
         }
 
-        stage('Staging: deploy') {
+        stage('Staging') {
             agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                     reuseNode true
                 }
             }
@@ -89,35 +89,12 @@ pipeline {
                     node_modules/.bin/netlify --version
                     echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json > deploy.json
-                    cat deploy.json
-                '''
-                script {
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy.json", returnStdout: true)
-                }
-            }
-        }
-
-        stage('Staging: E2E tests') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                }
-            }
-            
-            environment {
-                CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
-            }
-
-            steps {
-                sh '''
+                    export CI_ENVIRONMENT_URL = node_modules/.bin/netlify deploy --dir=build --json | node_modules/.bin/node-jq -r '.deploy_url'
+                    echo "CI_ENVIRONMENT_URL: $CI_ENVIRONMENT_URL"
                     echo "Performing E2E tests"
-                    echo "Staging URL: $CI_ENVIRONMENT_URL"
                     npx playwright test --reporter=html
                 '''
             }
-
             post {
                 always {
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Staging HTML Report', reportTitles: '', useWrapperFileDirectly: true])
