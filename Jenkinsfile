@@ -68,7 +68,7 @@ pipeline {
 
                     post {
                         always {
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Local HTML Report', reportTitles: '', useWrapperFileDirectly: true])
                         }
                     }
                 }
@@ -93,7 +93,7 @@ pipeline {
                     cat deploy.json
                 '''
                 script {
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy.json")
+                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy.json", returnStdout: true)
                 }
             }
         }
@@ -112,7 +112,9 @@ pipeline {
 
             steps {
                 sh '''
-                    echo "Performing E2E tests on $CI_ENVIRONMENT_URL"
+                    echo "Performing E2E tests"
+                    echo "Staging URL: $CI_ENVIRONMENT_URL"
+                    npx playwright test --reporter=html
                 '''
             }
 
